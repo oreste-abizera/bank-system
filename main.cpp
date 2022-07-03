@@ -8,12 +8,14 @@ using namespace std;
 class Bank {
 public:
     Bank();
-    void addAccount(string name, int balance);
-    void removeAccount(string name);
-    void printAccounts();
+    
     void menu();
     void administratorMenu();
     void normalUserMenu();
+
+    void addAccount(string name, int balance);
+    void removeAccount(string name);
+    void printAccounts();
     void deposit(string name, int amount);
     void withdraw(string name, int amount);
     void transfer(string name1, string name2, int amount);
@@ -46,7 +48,7 @@ void Bank::administratorMenu(){
     cout << "*********************************************************" << endl;
     // ask user to enter a number
     int choice;
-    cout << "Enter a number: ";
+    cout << "Enter Your Choice: ";
     cin >> choice;
     // switch statement to call the appropriate function
     switch (choice) {
@@ -150,12 +152,22 @@ void Bank::menu(){
     cout << "*********************************************************" << endl;
     // ask user to enter a number
     int choice;
+    string username;
+    string password;
     cout << "Enter your choice: ";
     cin >> choice;
     // switch statement to call the appropriate function
     switch (choice) {
         case 1:
-            administratorMenu();
+            cout << "Enter your username: ";
+            cin >> username;
+            cout << "Enter your password: ";
+            cin >> password;
+            if (username == "abizera" && password == "admin") {
+                administratorMenu();
+            } else {
+                cout << "Invalid username or password" << endl;
+            }
             break;
         case 2:
             normalUserMenu();
