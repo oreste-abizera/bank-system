@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ public:
     void administratorMenu();
     void normalUserMenu();
 
-    void addAccount(string name, int balance);
+    void addAccount();
     void removeAccount(string name);
     void printAccounts();
     void deposit(string name, int amount);
@@ -28,6 +29,66 @@ public:
 
 Bank::Bank() {
     name = "ISOKO YUBUKUNGU BANK";
+}
+
+void Bank::addAccount(){
+    // bank account fields for the new account to be added
+    string name;
+    string type;
+    int balance;
+    int accountNumber;
+
+    // ask admin to enter account details
+    cout << "Enter the name of the account owner: ";
+    cin.ignore();
+    getline(cin, name);
+    cout << "Enter the type of the account: ";
+    cin >> type;
+    cout << "Enter the balance of the account: ";
+    cin >> balance;
+    cout << "Enter the account number: ";
+    cin >> accountNumber;
+
+    m:
+    int found = 0;
+    fstream data;
+    string nam;
+    string ty;
+    int bal;
+    int accNum;
+
+    data.open("accounts.txt", ios::in);
+    if (data.fail()) {
+        cout << "Error opening file" << endl;
+        data.close();
+    } else {
+        // read the file line by line
+        while (data >> accNum >> ty >> bal >> nam) {
+            // if the account number already exists, ask admin to enter a new account number
+            if (accNum == accountNumber) {
+                cout << "Account number already exists" << endl;
+                cout << "Enter new account number: ";
+                cin >> accountNumber;
+                found = 1;
+                break;
+            }
+        }
+        data.close();
+    }
+
+        if(found == 1){
+            goto m;
+        }else {
+        data.open("accounts.txt", ios::app | ios::in);
+        data << accountNumber << " " << type << " " << balance << " " << name << endl;
+        data.close();
+                
+        cout << "\nAccount added successfully" << endl;
+        cout << "*" << "Account Number: " << accountNumber << "*" << endl;
+        cout << "*" << "Account Type: " << type << "*" << endl;
+        cout << "*" << "Account Balance: " << balance << "*" << endl;
+        cout << "*" << "Account Owner: " << name << "*" << endl << endl;
+  }
 }
 
 void Bank::administratorMenu(){
@@ -53,8 +114,7 @@ void Bank::administratorMenu(){
     // switch statement to call the appropriate function
     switch (choice) {
         case 1:
-            // addAccount();
-            cout << "Add an account" << endl;
+            addAccount();
             break;
         case 2:
             // removeAccount();
@@ -182,7 +242,7 @@ void Bank::menu(){
 }
 
 int main() {
-    Bank bank;
-    bank.menu();
+     Bank bank;
+     bank.menu();
     return 0;
 }
