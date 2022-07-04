@@ -125,6 +125,34 @@ void Bank::removeAccount(){
     }
 }
 
+void Bank::printAccounts(){
+    fstream data;
+    int accNum;
+    string nam;
+    string ty;
+    int bal;
+    int found = 0;
+    data.open("accounts.txt", ios::in);
+    if(data.fail()){
+        cout << "Error opening file" << endl;
+        data.close();
+    }else{
+        data >> accNum >> ty >> bal >> nam;
+        // print account table header
+        cout << "\n\n|_________________________________________________________________________________________|";
+        cout << "\n\n|Account Number\t\tAccount Type\t\tBalance\t\t\tOwner\n";
+        cout << "\n\n|_________________________________________________________________________________________|"; while(!data.eof()){
+        cout << "\n|" << accNum << "\t\t\t" << ty << "\t\t\t" << bal << "\t\t\t" << nam << "\n";
+        found = 1;
+        data >> accNum >> ty >> bal >> nam;
+        }
+        data.close();
+        if(found == 0){
+            cout << "No accounts found" << endl;
+        }
+    }
+}
+
 void Bank::administratorMenu(){
     cout << "*********************************************************" << endl;
     cout << "*                                                       *" << endl;
@@ -154,8 +182,7 @@ void Bank::administratorMenu(){
             removeAccount();
             break;
         case 3:
-            // printAccounts();
-            cout << "Print all accounts" << endl;
+            printAccounts();
             break;
         case 4:
             // deposit();
