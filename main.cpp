@@ -19,9 +19,9 @@ public:
     void printAccounts();
     void depositToAccount();
     void withdrawFromAccount();
-    void transfer(string name1, string name2, int amount);
-    void printTransactions(string name);
-    void printTransactions();
+    void transfer();
+    void printAccountTransactions();
+    void printAllTransactions();
 
     string bankName;
     string name;
@@ -248,6 +248,70 @@ void Bank::withdrawFromAccount(){
     }
 }
 
+void Bank::printAllTransactions(){
+    fstream data;
+    string transactionType;
+    int transactionOwner;
+    int transactionTo;
+    int transactionAmount;
+    int found = 0;
+    data.open("transactions.txt", ios::in);
+    if(data.fail()){
+        cout << "Error opening file" << endl;
+        data.close();
+    }else{
+        data >> transactionType >> transactionOwner >> transactionTo >> transactionAmount;
+        // print account table header
+        cout << "\n\n|_________________________________________________________________________________________|";
+        cout << "\n\n|Transaction Type\t\tIssuer\t\t\tTo\t\t\tAmount\n";
+        cout << "\n\n|_________________________________________________________________________________________|"; 
+        while(!data.eof()){
+        cout << "\n|" << transactionType << "\t\t\t" << transactionOwner << "\t\t\t" << transactionTo << "\t\t\t" << transactionAmount << "\n";
+        found = 1;
+        data >> transactionType >> transactionOwner >> transactionTo >> transactionAmount;
+        }
+        data.close();
+        if(found == 0){
+            cout << endl << "No transactions found" << endl;
+        }
+    }
+}
+
+void Bank::printAccountTransactions(){
+    fstream data;
+    string transactionType;
+    int transactionOwner;
+    int transactionTo;
+    int transactionAmount;
+    int found = 0;
+    int accNum;
+
+    cout << "Enter the account number: ";
+    cin >> accNum;
+    data.open("transactions.txt", ios::in);
+    if(data.fail()){
+        cout << "Error opening file" << endl;
+        data.close();
+    }else{
+        data >> transactionType >> transactionOwner >> transactionTo >> transactionAmount;
+        // print account table header
+        cout << "\n\n|_________________________________________________________________________________________|";
+        cout << "\n\n|Transaction Type\t\tIssuer\t\t\tTo\t\t\tAmount\n";
+        cout << "\n\n|_________________________________________________________________________________________|"; 
+        while(!data.eof()){
+        if(transactionOwner == accNum){
+            cout << "\n|" << transactionType << "\t\t\t" << transactionOwner << "\t\t\t" << transactionTo << "\t\t\t" << transactionAmount << "\n";
+            found = 1;
+        }
+        data >> transactionType >> transactionOwner >> transactionTo >> transactionAmount;
+        }
+        data.close();
+        if(found == 0){
+            cout << endl << "No transactions found" << endl;
+        }
+    }
+}
+
 void Bank::administratorMenu(){
     cout << "*********************************************************" << endl;
     cout << "*                                                       *" << endl;
@@ -290,12 +354,10 @@ void Bank::administratorMenu(){
             cout << "Transfer between accounts" << endl;
             break;
         case 7:
-            // printTransactions();
-            cout << "Print all transactions for an account" << endl;
+            printAccountTransactions();
             break;
         case 8:
-            // printTransactions();
-            cout << "Print all transactions for all accounts" << endl;
+            printAllTransactions();
             break;
         case 9:
             exit(0);
