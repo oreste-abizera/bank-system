@@ -17,7 +17,7 @@ public:
     void addAccount();
     void removeAccount();
     void printAccounts();
-    void deposit(string name, int amount);
+    void depositToAccount();
     void withdraw(string name, int amount);
     void transfer(string name1, string name2, int amount);
     void printTransactions(string name);
@@ -153,6 +153,52 @@ void Bank::printAccounts(){
     }
 }
 
+void Bank::depositToAccount(){
+    int accNum;
+    int found = 0;
+    int amount;
+    fstream data;
+    fstream data1;
+    fstream data2;
+    
+    data.open("accounts.txt", ios::in);
+    if(data.fail()){
+        cout << "Error opening file" << endl;
+        data.close();
+    }else{
+        data1.open("temp_accounts.txt", ios::app | ios::in);
+        cout << "Enter the account number: ";
+        cin >> accNum;
+        data >> accountNumber >> type >> balance >> name;
+        while(!data.eof()){
+            if(accountNumber == accNum){
+                cout << "Enter the amount to deposit: ";
+                cin >> amount;
+                balance += amount;
+                found = 1;
+
+                data2.open("transactions.txt", ios::app | ios::in);
+                data2 << "DEPOSIT" << " " << accNum << " " << -1 << " " << amount << endl;
+                data2.close();
+                cout << endl << endl << "Deposit successful" << endl;
+                cout << "*" << "Account Number: " << accountNumber << "*" << endl;
+                cout << "*" << "Account Type: " << type << "*" << endl;
+                cout << "*" << "Account Balance: " << balance << "*" << endl;
+                cout << "*" << "Account Owner: " << name << "*" << endl << endl;
+            }
+            data1 << accountNumber << " " << type << " " << balance << " " << name << endl;
+            data >> accountNumber >> type >> balance >> name;
+        }
+        data.close();
+        data1.close();
+        remove("accounts.txt");
+        rename("temp_accounts.txt", "accounts.txt");
+        if(found == 0){
+            cout << "Account not found" << endl;
+        }
+    }
+}
+
 void Bank::administratorMenu(){
     cout << "*********************************************************" << endl;
     cout << "*                                                       *" << endl;
@@ -185,8 +231,7 @@ void Bank::administratorMenu(){
             printAccounts();
             break;
         case 4:
-            // deposit();
-            cout << "Deposit to an account" << endl;
+            depositToAccount();
             break;
         case 5:
             // withdraw();
