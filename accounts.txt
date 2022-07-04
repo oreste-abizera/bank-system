@@ -1,6 +1,2 @@
-123456 Savings 5000 Tauras
-123456 Savings 10000 Coder
-123456 Savings 3000 Oreste
-123456 Test 2000 Test
 12345 Test2 1000 Test2
-1234 Test3 500 Test3
+12346 Userr 300 Userr

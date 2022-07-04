@@ -15,7 +15,7 @@ public:
     void normalUserMenu();
 
     void addAccount();
-    void removeAccount(string name);
+    void removeAccount();
     void printAccounts();
     void deposit(string name, int amount);
     void withdraw(string name, int amount);
@@ -23,21 +23,19 @@ public:
     void printTransactions(string name);
     void printTransactions();
 
-    string name;
-};
-
-
-Bank::Bank() {
-    name = "ISOKO YUBUKUNGU BANK";
-}
-
-void Bank::addAccount(){
-    // bank account fields for the new account to be added
+    string bankName;
     string name;
     string type;
     int balance;
     int accountNumber;
+};
 
+
+Bank::Bank() {
+    bankName = "ISOKO YUBUKUNGU BANK";
+}
+
+void Bank::addAccount(){
     // ask admin to enter account details
     cout << "Enter the name of the account owner: ";
     cin.ignore();
@@ -91,10 +89,46 @@ void Bank::addAccount(){
   }
 }
 
+void Bank::removeAccount(){
+    fstream data, data1;
+    int accNum;
+    int found = 0;
+
+    cout << "Enter the account number: ";
+    cin >> accNum;
+    data.open("accounts.txt", ios::in);
+
+    if(data.fail()){
+        cout << "Error opening file" << endl;
+        data.close();
+    }else{
+        data1.open("temp.txt", ios::app | ios::in);
+        data >> accountNumber >> type >> balance >> name;
+        while(!data.eof()){
+            if(accountNumber != accNum){
+                data1 << accountNumber << " " << type << " " << balance << " " << name << endl;
+            }else{
+                cout << "Account removed successfully" << endl;
+                found = 1;
+            }
+            data >> accountNumber >> type >> balance >> name;
+        }
+
+        data.close();
+        data1.close();
+        remove("accounts.txt");
+        rename("temp.txt", "accounts.txt");
+
+        if(found == 0){
+            cout << endl << endl << "Account not found!" << endl;
+        }
+    }
+}
+
 void Bank::administratorMenu(){
     cout << "*********************************************************" << endl;
     cout << "*                                                       *" << endl;
-    cout << "* Welcome to " << name << "                       *" << endl;
+    cout << "* Welcome to " << bankName << "                       *" << endl;
     cout << "*                                                       *" << endl;
     cout << "* 1. Add an account                                     *" << endl;
     cout << "* 2. Remove an account                                  *" << endl;
@@ -117,8 +151,7 @@ void Bank::administratorMenu(){
             addAccount();
             break;
         case 2:
-            // removeAccount();
-            cout << "Remove an account" << endl;
+            removeAccount();
             break;
         case 3:
             // printAccounts();
@@ -156,7 +189,7 @@ void Bank::administratorMenu(){
 void Bank::normalUserMenu(){
     cout << "*********************************************************" << endl;
     cout << "*                                                       *" << endl;
-    cout << "* Welcome to " << name << "                       *" << endl;
+    cout << "* Welcome to " << bankName << "                       *" << endl;
     cout << "*                                                       *" << endl;
     cout << "* 1. Deposit to my account                              *" << endl;
     cout << "* 2. Withdraw from my account                           *" << endl;
@@ -203,7 +236,7 @@ void Bank::normalUserMenu(){
 void Bank::menu(){
     cout << "*********************************************************" << endl;
     cout << "*                                                       *" << endl;
-    cout << "* Welcome to " << name << "                       *" << endl;
+    cout << "* Welcome to " << bankName << "                       *" << endl;
     cout << "*                                                       *" << endl;
     cout << "* 1. Administrator                                      *" << endl;
     cout << "* 2. Normal User                                        *" << endl;
